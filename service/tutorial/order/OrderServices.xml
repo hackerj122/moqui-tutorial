@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
 
     <!-- Sample service to get Order Header details by statusId using Entity Find -->
     <service verb="get" noun="OrderHeadersByStatus">
@@ -22,6 +22,130 @@
             </entity-find>
 
             <!-- The ordersList will be returned as the output. -->
+        </actions>
+    </service>
+<!--    Find all Person records for all females-->
+    <service verb="get" noun="FemalePersons">
+        <out-parameters>
+            <parameter name="personList"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.party.Person" list="personList">
+                <econdition field-name="gender" value="F"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    List the Person details with MarsMarried marital status-->
+    <service verb="get" noun="Persons">
+        <out-parameters>
+            <parameter name="personList"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.party.Person" list="personList">
+                <econdition field-name="maritalStatusEnumId" value="MarsMarried"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    Find all Order Header records so that the latest placed order appears at the top.-->
+    <service verb="get" noun="LatestOrders">
+        <out-parameters>
+            <parameter name="orderList"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderHeader" list="orderList">
+                <order-by field-name="-placedDate"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    Find the Order Header details for a given orderId-->
+    <service verb="get" noun="Order">
+        <in-parameters>
+            <parameter name="orderId"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderDetails"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderHeader" list="orderDetails">
+                <econdition field-name="orderId"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    Find all Order Header records with the grandTotal greater than 50.-->
+    <service verb="get" noun="OrderHeader">
+       <out-parameters>
+           <parameter name="orderHeaderDetails"/>
+       </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderHeader" list="orderHeaderDetails">
+                <econdition field-name="grandTotal" operator="greater" value="50"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    List all Order Item details for the order with orderId, 100102 and orderPartSeqId, 01-->
+    <service verb="get" noun="OrderItems">
+        <out-parameters>
+            <parameter name="orderItemsDetails"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderItem" list="orderItemsDetails">
+                <having-econditions>
+                    <econdition field-name="orderId" value="100102"/>
+                    <econdition field-name="orderPartSeqId" value="01"/>
+                </having-econditions>
+            </entity-find>
+        </actions>
+    </service>
+<!--    Find all Order Parts with partTotal less than equals to 20-->
+    <service verb="get" noun="OrderParts">
+        <out-parameters>
+            <parameter name="orderPartDetails"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderPart" list="orderPartDetails">
+                <econdition field-name="partTotal" operator="greater" value="20"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    Find all Order Part records assigned to the facility with ZIRET_WH value.-->
+    <service verb="get" noun="OrderPartData">
+        <out-parameters>
+            <parameter name="orderPartDetails"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderPart" list="orderPartDetails" distinct="true">
+                <econdition field-name="facilityId" value="ZIRET_WH"/>
+                <select-field field-name="orderId"/>
+                <select-field field-name="orderPartSeqId"/>
+                <select-field field-name="facilityId"/>
+                <select-field field-name="partName"/>
+                <select-field field-name="customerPartyId"/>
+            </entity-find>
+        </actions>
+    </service>
+<!--    Find the count of order parts for the customer Party Id, “CustJqp”.-->
+    <service verb="get" noun="OrderPartCount">
+        <out-parameters>
+            <parameter name="orderPartCount"/>
+        </out-parameters>
+        <actions>
+            <entity-find-count entity-name="mantle.order.OrderPart" count-field="orderPartCount">
+                <econdition field-name="customerPartyId" value="CustJqp"/>
+            </entity-find-count>
+        </actions>
+    </service>
+<!--    .Find all unique Order Parts with shipmentMethodEnumId value as “ShtMthGround” and facilityId as “ZIRET_WH”.-->
+    <service verb="get" noun="OrderPartsInfo">
+        <out-parameters>
+            <parameter name="orderPartList"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="mantle.order.OrderPart" distinct="true" list="orderPartList">
+                <having-econditions>
+                    <econdition field-name="shipmentMethodEnumId" value="ShMthNextDay"/>
+                    <econdition field-name="facilityId" value="ZIRET_WH"/>
+                </having-econditions>
+            </entity-find>
         </actions>
     </service>
 </services>
