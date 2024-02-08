@@ -24,7 +24,7 @@
             <!-- The ordersList will be returned as the output. -->
         </actions>
     </service>
-<!--    Find all Person records for all females-->
+<!--    1.Find all Person records for all females-->
     <service verb="get" noun="FemalePersons">
         <out-parameters>
             <parameter name="personList"/>
@@ -35,7 +35,7 @@
             </entity-find>
         </actions>
     </service>
-<!--    List the Person details with MarsMarried marital status-->
+<!--   2. List the Person details with MarsMarried marital status-->
     <service verb="get" noun="Persons">
         <out-parameters>
             <parameter name="personList"/>
@@ -46,7 +46,7 @@
             </entity-find>
         </actions>
     </service>
-<!--    Find all Order Header records so that the latest placed order appears at the top.-->
+<!--   3. Find all Order Header records so that the latest placed order appears at the top.-->
     <service verb="get" noun="LatestOrders">
         <out-parameters>
             <parameter name="orderList"/>
@@ -57,22 +57,20 @@
             </entity-find>
         </actions>
     </service>
-<!--    Find the Order Header details for a given orderId-->
+<!--   4. Find the Order Header details for a given orderId-->
     <service verb="get" noun="Order">
         <in-parameters>
             <parameter name="orderId"/>
         </in-parameters>
         <out-parameters>
-            <parameter name="orderDetails"/>
+            <parameter name="orderDetails" required="true"/>
         </out-parameters>
         <actions>
-            <entity-find entity-name="mantle.order.OrderHeader" list="orderDetails">
-                <econdition field-name="orderId"/>
-            </entity-find>
+           <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderDetails"/>
         </actions>
     </service>
-<!--    Find all Order Header records with the grandTotal greater than 50.-->
-    <service verb="get" noun="OrderHeader">
+<!--   5. Find all Order Header records with the grandTotal greater than 50.-->
+    <service verb="get" noun="OrderHeaders">
        <out-parameters>
            <parameter name="orderHeaderDetails"/>
        </out-parameters>
@@ -82,7 +80,7 @@
             </entity-find>
         </actions>
     </service>
-<!--    List all Order Item details for the order with orderId, 100102 and orderPartSeqId, 01-->
+<!--   6. List all Order Item details for the order with orderId, 100102 and orderPartSeqId, 01-->
     <service verb="get" noun="OrderItems">
         <out-parameters>
             <parameter name="orderItemsDetails"/>
@@ -96,7 +94,7 @@
             </entity-find>
         </actions>
     </service>
-<!--    Find all Order Parts with partTotal less than equals to 20-->
+<!--  7.  Find all Order Parts with partTotal less than equals to 20-->
     <service verb="get" noun="OrderParts">
         <out-parameters>
             <parameter name="orderPartDetails"/>
@@ -107,7 +105,7 @@
             </entity-find>
         </actions>
     </service>
-<!--    Find all Order Part records assigned to the facility with ZIRET_WH value.-->
+<!--  8.  Find all Order Part records assigned to the facility with ZIRET_WH value.-->
     <service verb="get" noun="OrderPartData">
         <out-parameters>
             <parameter name="orderPartDetails"/>
@@ -123,8 +121,8 @@
             </entity-find>
         </actions>
     </service>
-<!--    Find the count of order parts for the customer Party Id, “CustJqp”.-->
-    <service verb="get" noun="OrderPartCount">
+<!--  9.  Find the count of order parts for the customer Party Id, “CustJqp”.-->
+    <service verb="get" noun="OrderPartsCount">
         <out-parameters>
             <parameter name="orderPartCount"/>
         </out-parameters>
@@ -134,13 +132,13 @@
             </entity-find-count>
         </actions>
     </service>
-<!--    .Find all unique Order Parts with shipmentMethodEnumId value as “ShtMthGround” and facilityId as “ZIRET_WH”.-->
+<!--   10. Find all unique Order Parts with shipmentMethodEnumId value as “ShtMthGround” and facilityId as “ZIRET_WH”.-->
     <service verb="get" noun="OrderPartsInfo">
         <out-parameters>
             <parameter name="orderPartList"/>
         </out-parameters>
         <actions>
-            <entity-find entity-name="mantle.order.OrderPart" distinct="true" list="orderPartList">
+            <entity-find entity-name="mantle.order.OrderPart" list="orderPartList" distinct="true">
                 <having-econditions>
                     <econdition field-name="shipmentMethodEnumId" value="ShMthNextDay"/>
                     <econdition field-name="facilityId" value="ZIRET_WH"/>
@@ -148,4 +146,5 @@
             </entity-find>
         </actions>
     </service>
+
 </services>
